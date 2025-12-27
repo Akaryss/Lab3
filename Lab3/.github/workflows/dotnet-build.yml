@@ -1,0 +1,32 @@
+name: .NET Core Build (Multi-platform)
+
+# Триггер: запускать при любом push или pull request в репозиторий
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    # Матрица стратегий для сборки под две разные платформы
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest] # Linux и Windows
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x # Укажи свою версию (например, 7.0.x или 8.0.x)
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
