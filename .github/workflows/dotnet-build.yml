@@ -1,6 +1,5 @@
 name: .NET Core Build (Multi-platform)
 
-# Триггер: запускать при любом push или pull request в репозиторий
 on:
   push:
     branches: [ "main", "master" ]
@@ -9,12 +8,16 @@ on:
 
 jobs:
   build:
-    # Матрица стратегий для сборки под две разные платформы
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest] # Linux и Windows
+        os: [ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
+
+    # Указываем, что все команды 'run' должны выполняться в папке Lab3
+    defaults:
+      run:
+        working-directory: Lab3
 
     steps:
     - name: Checkout code
@@ -23,7 +26,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x # Укажи свою версию (например, 7.0.x или 8.0.x)
+        dotnet-version: 8.0.x # Убедись, что это совпадает с твоим проектом (8.0 или 7.0)
 
     - name: Restore dependencies
       run: dotnet restore
